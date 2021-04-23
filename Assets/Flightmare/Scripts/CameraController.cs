@@ -720,11 +720,16 @@ namespace RPGFlightmare
       // Initialize additional objects
       foreach (var obj_state in settings.objects)
       {
-        // GameObject prefab = Resources.Load(obj_state.prefabID) as GameObject;
-        Debug.Log("obj_state id : " + obj_state.ID);
-        GameObject obj = internal_state.getGameobject(obj_state.ID, gate_template);
+        Debug.Log("Instantiating obj_state id : " + obj_state.ID);
+        GameObject prefab = Resources.Load(obj_state.prefabID) as GameObject;
+        if(prefab == null)
+        {
+          Debug.Log("Failed loading object, using default");
+          prefab = gate_template;
+        }
+        GameObject obj = internal_state.getGameobject(obj_state.ID, prefab);
+        obj.transform.SetPositionAndRotation(ListToVector3(obj_state.position), ListToQuaternion(obj_state.rotation));
         obj.transform.localScale = ListToVector3(obj_state.size);
-        // obj.layer = 9;
       }
       foreach (var vehicle in settings.vehicles)
       {
